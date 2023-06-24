@@ -49,7 +49,18 @@ class _ContactListState extends State<ContactList> {
                 MaterialPageRoute(
                   builder: (context) => const ContacEditor(),
                 ),
-              );
+              ).then((value) {
+                if (value != null) {
+                  try {
+                    Contactmodel datas = value;
+
+                    data.add(datas);
+                  } catch (e) {}
+                }
+                setState(() {
+                  //
+                });
+              });
             },
             icon: const Icon(Icons.add),
           ),
@@ -85,19 +96,13 @@ class _ContactListState extends State<ContactList> {
                               ),
                             ),
                           ).then((value) {
-                            // print('asdasdsads');
-                            // print(value);
                             if (value != null) {
                               try {
-                                Contactmodel datas =
-                                    Contactmodel.fromMap(value);
+                                Contactmodel datas = value;
                                 var index = data.indexWhere(
                                     (element) => element.id == datas.id);
-                                if (index == -1) {
-                                  data.add(datas);
-                                } else {
-                                  data[index] = datas;
-                                }
+
+                                data[index] = datas;
                               } catch (e) {}
                             }
                             setState(() {

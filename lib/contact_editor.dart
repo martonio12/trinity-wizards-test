@@ -110,8 +110,9 @@ class _ContacEditorState extends State<ContacEditor> {
                   email: controllerEmail.text,
                   dob: controllerDOB.text,
                 );
+                print(result);
 
-                Navigator.pop(context, result.toJson());
+                Navigator.pop(context, result);
               }
             },
             child: const Text(
