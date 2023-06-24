@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:trinity_wizards_test/model/contact_model.dart';
 
 class ContactWidget extends StatelessWidget {
-  const ContactWidget({Key? key, required this.name}) : super(key: key);
-  final String name;
+  const ContactWidget({Key? key, required this.data}) : super(key: key);
+  final Contactmodel data;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +26,14 @@ class ContactWidget extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
+          Center(
+            child: Text(
+              data.firstName + ' ' + data.lastName,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           )
         ],

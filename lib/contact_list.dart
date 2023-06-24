@@ -13,7 +13,10 @@ class ContactList extends StatefulWidget {
 }
 
 class _ContactListState extends State<ContactList> {
+  TextEditingController controllerSearch = TextEditingController();
   List<Contactmodel> data = [];
+  List<Contactmodel> dataTemp = [];
+  bool isSearch = false;
   @override
   void initState() {
     super.initState();
@@ -24,8 +27,20 @@ class _ContactListState extends State<ContactList> {
     Contactmodel.readJson().then((value) {
       setState(() {
         data = value;
+        dataTemp = data;
       });
     });
+  }
+
+  void search(String keyword) {
+    for (Contactmodel item in data) {
+      if (item.firstName.toLowerCase().contains(keyword) ||
+          item.lastName.toLowerCase().contains(keyword) ||
+          item.email!.toLowerCase().contains(keyword)) {
+        dataTemp.add(item);
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -38,7 +53,12 @@ class _ContactListState extends State<ContactList> {
               fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
         ),
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              controllerSearch.text = '';
+              isSearch = !isSearch;
+            });
+          },
           icon: const Icon(Icons.search),
         ),
         actions: [
@@ -53,7 +73,6 @@ class _ContactListState extends State<ContactList> {
                 if (value != null) {
                   try {
                     Contactmodel datas = value;
-
                     data.add(datas);
                   } catch (e) {}
                 }
@@ -76,6 +95,21 @@ class _ContactListState extends State<ContactList> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
+                Visibility(
+                  visible: isSearch,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: TextFormField(
+                      controller: controllerSearch,
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        //
+                      },
+                    ),
+                  ),
+                ),
                 GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -83,7 +117,7 @@ class _ContactListState extends State<ContactList> {
                     crossAxisCount: 2,
                   ),
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: data.length,
+                  itemCount: dataTemp.length,
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
@@ -101,7 +135,6 @@ class _ContactListState extends State<ContactList> {
                                 Contactmodel datas = value;
                                 var index = data.indexWhere(
                                     (element) => element.id == datas.id);
-
                                 data[index] = datas;
                               } catch (e) {}
                             }
@@ -110,7 +143,7 @@ class _ContactListState extends State<ContactList> {
                             });
                           });
                         },
-                        child: ContactWidget(name: data[index].firstName));
+                        child: ContactWidget(data: dataTemp[index]));
                   },
                 )
               ],
